@@ -52,4 +52,9 @@ public sealed class CatalogItem
     /// </summary>
     [Timestamp]
     public byte[] RowVersion { get; set; } = [];
+
+    /// <summary>
+    /// Individually identifiable physical units belonging to this catalog definition.
+    /// </summary>
+    public ICollection<TrackedUnit> TrackedUnits { get; set; } = [];
 }

@@ -17,6 +17,7 @@ The completed foundation and first schema slice provide:
 - `CatalogItems` and `InventoryLocations` tables
 - Initial EF Core migrations applied to the local development database
 - Administrative create, view, edit, and delete pages for both tables
+- Individually identifiable tracked units linked to catalog items and home locations
 
 Tracked units and untracked inventory quantities will be added in a later milestone.
 
@@ -103,6 +104,7 @@ After starting the application, use the **Admin** navigation menu or open:
 
 - `/Admin/CatalogItems`
 - `/Admin/InventoryLocations`
+- `/Admin/TrackedUnits`
 
 The pages validate input, report duplicate records, and use SQL Server rowversion
 values to prevent one administrator from silently overwriting another's changes.

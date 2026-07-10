@@ -10,6 +10,8 @@ public sealed class DetailsModel(ApplicationDbContext dbContext) : PageModel
 {
     public CatalogItem Item { get; private set; } = null!;
 
+    public IReadOnlyList<TrackedUnit> TrackedUnits { get; private set; } = [];
+
     public async Task<IActionResult> OnGetAsync(int id)
     {
         var item = await dbContext.CatalogItems.AsNoTracking().SingleOrDefaultAsync(item => item.Id == id);
@@ -19,6 +21,12 @@ public sealed class DetailsModel(ApplicationDbContext dbContext) : PageModel
         }
 
         Item = item;
+        TrackedUnits = await dbContext.TrackedUnits
+            .AsNoTracking()
+            .Include(unit => unit.HomeLocation)
+            .Where(unit => unit.CatalogItemId == id)
+            .OrderBy(unit => unit.Identifier)
+            .ToListAsync();
         return Page();
     }
 }

@@ -79,6 +79,8 @@ public sealed class InventoryLocation
     [Timestamp]
     public byte[] RowVersion { get; set; } = [];
 
+    public ICollection<TrackedUnit> TrackedUnits { get; set; } = [];
+
     internal void NormalizeCodes()
     {
         // Normalizing before persistence makes the composite unique index reliable even

@@ -53,6 +53,7 @@ public sealed class ApplicationDbContextModelTests
     [Theory]
     [InlineData(typeof(CatalogItem), nameof(CatalogItem.RowVersion))]
     [InlineData(typeof(InventoryLocation), nameof(InventoryLocation.RowVersion))]
+    [InlineData(typeof(TrackedUnit), nameof(TrackedUnit.RowVersion))]
     public void Row_version_is_a_database_generated_concurrency_token(
         Type entityType,
         string propertyName)
@@ -63,5 +64,28 @@ public sealed class ApplicationDbContextModelTests
         Assert.NotNull(property);
         Assert.True(property.IsConcurrencyToken);
         Assert.Equal(ValueGenerated.OnAddOrUpdate, property.ValueGenerated);
+    }
+
+    [Fact]
+    public void Tracked_unit_identifier_is_unique_within_its_catalog_item()
+    {
+        using var context = CreateContext();
+        var entity = context.Model.FindEntityType(typeof(TrackedUnit));
+
+        Assert.NotNull(entity);
+        Assert.Contains(entity.GetIndexes(), index =>
+            index.IsUnique &&
+            index.Properties.Select(property => property.Name).SequenceEqual(
+                [nameof(TrackedUnit.CatalogItemId), nameof(TrackedUnit.Identifier)]));
+    }
+
+    [Fact]
+    public void Tracked_unit_parents_use_restrict_delete_behavior()
+    {
+        using var context = CreateContext();
+        var foreignKeys = context.Model.FindEntityType(typeof(TrackedUnit))?.GetForeignKeys();
+
+        Assert.NotNull(foreignKeys);
+        Assert.All(foreignKeys, foreignKey => Assert.Equal(DeleteBehavior.Restrict, foreignKey.DeleteBehavior));
     }
 }

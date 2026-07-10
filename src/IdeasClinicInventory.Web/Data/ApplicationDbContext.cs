@@ -17,6 +17,8 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
 
     public DbSet<InventoryLocation> InventoryLocations => Set<InventoryLocation>();
 
+    public DbSet<TrackedUnit> TrackedUnits => Set<TrackedUnit>();
+
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
         PrepareEntitiesForSave();
@@ -59,6 +61,16 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
             if (entry.State is EntityState.Added or EntityState.Modified)
             {
                 entry.Entity.NormalizeCodes();
+            }
+
+            SetAuditTimestamps(entry, now);
+        }
+
+        foreach (var entry in ChangeTracker.Entries<TrackedUnit>())
+        {
+            if (entry.State is EntityState.Added or EntityState.Modified)
+            {
+                entry.Entity.Identifier = entry.Entity.Identifier.Trim();
             }
 
             SetAuditTimestamps(entry, now);
