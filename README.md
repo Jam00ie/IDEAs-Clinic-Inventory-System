@@ -16,6 +16,7 @@ The completed foundation and first schema slice provide:
 - Repository-pinned .NET SDK and `dotnet-ef` tool
 - `CatalogItems` and `InventoryLocations` tables
 - Initial EF Core migrations applied to the local development database
+- Administrative create, view, edit, and delete pages for both tables
 
 Tracked units and untracked inventory quantities will be added in a later milestone.
 
@@ -95,6 +96,18 @@ To inspect the server in SQL Server Management Studio, connect to
 
 After applying the migrations, both endpoints should report `Healthy` while SQL
 Server Express is running.
+
+## Administrative pages
+
+After starting the application, use the **Admin** navigation menu or open:
+
+- `/Admin/CatalogItems`
+- `/Admin/InventoryLocations`
+
+The pages validate input, report duplicate records, and use SQL Server rowversion
+values to prevent one administrator from silently overwriting another's changes.
+Authentication is not connected yet, so these routes are not currently secure.
+An Entra-backed `AdminOnly` authorization policy must be applied before deployment.
 
 ## Repository structure
 

@@ -1,0 +1,26 @@
+@page "{id:int}"
+@model IdeasClinicInventory.Web.Pages.Admin.InventoryLocations.DeleteModel
+@{
+    ViewData["Title"] = "Delete inventory location";
+}
+
+<h1>Delete inventory location</h1>
+<div class="alert alert-danger" role="alert">
+    <strong>This permanently deletes @Model.Location.LocationCode.</strong> This action cannot be undone.
+</div>
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+    <input type="hidden" asp-for="Location.Id" />
+    <input type="hidden" asp-for="Location.RowVersion" />
+
+    <dl class="row details-list">
+        <dt class="col-sm-4">Room code</dt><dd class="col-sm-8">@Model.Location.RoomCode</dd>
+        <dt class="col-sm-4">Storage unit</dt><dd class="col-sm-8">@Model.Location.StorageUnitCode</dd>
+        <dt class="col-sm-4">Level</dt><dd class="col-sm-8">@Model.Location.StorageUnitLevel</dd>
+        <dt class="col-sm-4">Subunit</dt><dd class="col-sm-8">@(Model.Location.Subunit ?? "—")</dd>
+    </dl>
+
+    <button type="submit" class="btn btn-danger">Delete permanently</button>
+    <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+</form>

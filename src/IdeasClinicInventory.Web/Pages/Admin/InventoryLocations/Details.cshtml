@@ -1,0 +1,24 @@
+@page "{id:int}"
+@model IdeasClinicInventory.Web.Pages.Admin.InventoryLocations.DetailsModel
+@{
+    ViewData["Title"] = Model.Location.LocationCode;
+}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h1>@Model.Location.LocationCode</h1>
+    <div>
+        <a class="btn btn-primary" asp-page="Edit" asp-route-id="@Model.Location.Id">Edit</a>
+        <a class="btn btn-outline-secondary" asp-page="Index">Back to locations</a>
+    </div>
+</div>
+
+<dl class="row details-list">
+    <dt class="col-sm-4">Room code</dt><dd class="col-sm-8">@Model.Location.RoomCode</dd>
+    <dt class="col-sm-4">Storage unit level</dt><dd class="col-sm-8">@Model.Location.StorageUnitLevel</dd>
+    <dt class="col-sm-4">Storage unit code</dt><dd class="col-sm-8">@Model.Location.StorageUnitCode</dd>
+    <dt class="col-sm-4">Subunit</dt><dd class="col-sm-8">@(Model.Location.Subunit ?? "—")</dd>
+    <dt class="col-sm-4">Reference image path</dt><dd class="col-sm-8 text-break">@(Model.Location.ReferenceImagePath ?? "—")</dd>
+    <dt class="col-sm-4">Notes</dt><dd class="col-sm-8 preserve-lines">@(Model.Location.Notes ?? "—")</dd>
+    <dt class="col-sm-4">Created</dt><dd class="col-sm-8">@Model.Location.CreatedAtUtc.ToLocalTime().ToString("g")</dd>
+    <dt class="col-sm-4">Last updated</dt><dd class="col-sm-8">@Model.Location.UpdatedAtUtc.ToLocalTime().ToString("g")</dd>
+</dl>

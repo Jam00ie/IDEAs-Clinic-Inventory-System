@@ -1,0 +1,25 @@
+@page "{id:int}"
+@model IdeasClinicInventory.Web.Pages.Admin.CatalogItems.DetailsModel
+@{
+    ViewData["Title"] = Model.Item.Name;
+}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h1>@Model.Item.Name</h1>
+    <div>
+        <a class="btn btn-primary" asp-page="Edit" asp-route-id="@Model.Item.Id">Edit</a>
+        <a class="btn btn-outline-secondary" asp-page="Index">Back to catalog</a>
+    </div>
+</div>
+
+<dl class="row details-list">
+    <dt class="col-sm-4">Category</dt><dd class="col-sm-8">@(Model.Item.Category ?? "—")</dd>
+    <dt class="col-sm-4">Unit of measure</dt><dd class="col-sm-8">@(Model.Item.UnitOfMeasure ?? "—")</dd>
+    <dt class="col-sm-4">Allowed use</dt><dd class="col-sm-8">@Html.DisplayFor(model => model.Item.AllowedUseType)</dd>
+    <dt class="col-sm-4">Access</dt><dd class="col-sm-8">@(Model.Item.RestrictedToAdmins ? "IDEAs Clinic administrators only" : "All Waterloo users")</dd>
+    <dt class="col-sm-4">Reserved for administrators</dt><dd class="col-sm-8">@Model.Item.QuantityReservedForAdmins</dd>
+    <dt class="col-sm-4">Reference image path</dt><dd class="col-sm-8 text-break">@(Model.Item.ReferenceImagePath ?? "—")</dd>
+    <dt class="col-sm-4">Notes</dt><dd class="col-sm-8 preserve-lines">@(Model.Item.Notes ?? "—")</dd>
+    <dt class="col-sm-4">Created</dt><dd class="col-sm-8">@Model.Item.CreatedAtUtc.ToLocalTime().ToString("g")</dd>
+    <dt class="col-sm-4">Last updated</dt><dd class="col-sm-8">@Model.Item.UpdatedAtUtc.ToLocalTime().ToString("g")</dd>
+</dl>

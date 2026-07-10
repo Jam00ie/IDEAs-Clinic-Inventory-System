@@ -1,0 +1,25 @@
+@page "{id:int}"
+@model IdeasClinicInventory.Web.Pages.Admin.CatalogItems.DeleteModel
+@{
+    ViewData["Title"] = "Delete catalog item";
+}
+
+<h1>Delete catalog item</h1>
+<div class="alert alert-danger" role="alert">
+    <strong>This permanently deletes the catalog definition.</strong> This action cannot be undone.
+</div>
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+    <input type="hidden" asp-for="Item.Id" />
+    <input type="hidden" asp-for="Item.RowVersion" />
+
+    <dl class="row details-list">
+        <dt class="col-sm-4">Name</dt><dd class="col-sm-8">@Model.Item.Name</dd>
+        <dt class="col-sm-4">Category</dt><dd class="col-sm-8">@(Model.Item.Category ?? "—")</dd>
+        <dt class="col-sm-4">Allowed use</dt><dd class="col-sm-8">@Html.DisplayFor(model => model.Item.AllowedUseType)</dd>
+    </dl>
+
+    <button type="submit" class="btn btn-danger">Delete permanently</button>
+    <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+</form>

@@ -1,0 +1,64 @@
+@page
+@model IdeasClinicInventory.Web.Pages.Admin.InventoryLocations.IndexModel
+@{
+    ViewData["Title"] = "Inventory locations";
+}
+
+@if (TempData["StatusMessage"] is string statusMessage)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="status">
+        @statusMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+        <h1>Inventory locations</h1>
+        <p class="text-muted mb-0">Manage the structured physical locations where stock is stored.</p>
+    </div>
+    <a class="btn btn-primary" asp-page="Create">Create location</a>
+</div>
+
+<div class="alert alert-warning" role="alert">
+    Authentication is not connected yet. These pages will be restricted to IDEAs Clinic administrators when Entra ID is added.
+</div>
+
+@if (Model.InventoryLocations.Count == 0)
+{
+    <div class="alert alert-info">No inventory locations have been created.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Location code</th>
+                    <th>Room</th>
+                    <th>Level</th>
+                    <th>Storage unit</th>
+                    <th>Subunit</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var location in Model.InventoryLocations)
+                {
+                    <tr>
+                        <td><strong>@location.LocationCode</strong></td>
+                        <td>@location.RoomCode</td>
+                        <td>@location.StorageUnitLevel</td>
+                        <td>@location.StorageUnitCode</td>
+                        <td>@(location.Subunit ?? "—")</td>
+                        <td class="text-end text-nowrap">
+                            <a class="btn btn-sm btn-outline-secondary" asp-page="Details" asp-route-id="@location.Id">View</a>
+                            <a class="btn btn-sm btn-outline-primary" asp-page="Edit" asp-route-id="@location.Id">Edit</a>
+                            <a class="btn btn-sm btn-outline-danger" asp-page="Delete" asp-route-id="@location.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
