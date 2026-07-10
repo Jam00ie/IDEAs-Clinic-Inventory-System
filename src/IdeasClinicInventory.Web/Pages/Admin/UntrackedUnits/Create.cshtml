@@ -1,0 +1,48 @@
+@page
+@model IdeasClinicInventory.Web.Pages.Admin.UntrackedUnits.CreateModel
+@{
+    ViewData["Title"] = "Create Untracked Units";
+    var canCreate = Model.CatalogItemOptions.Count > 0 && Model.LocationOptions.Count > 0;
+}
+
+<h1>Create Untracked Units</h1>
+<p class="text-muted">Record one counted quantity for a catalog item at a specific location.</p>
+
+@if (!canCreate)
+{
+    <div class="alert alert-warning" role="alert">
+        Create at least one <a asp-page="/Admin/CatalogItems/Create">catalog item</a> and
+        one <a asp-page="/Admin/InventoryLocations/Create">inventory location</a> first.
+    </div>
+}
+
+<form method="post" class="admin-form">
+    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+    <div class="mb-3">
+        <label asp-for="Input.CatalogItemId" class="form-label"></label>
+        <select asp-for="Input.CatalogItemId" asp-items="Model.CatalogItemOptions" class="form-select"><option value="0">Select a Catalog Item</option></select>
+        <span asp-validation-for="Input.CatalogItemId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.LocationId" class="form-label"></label>
+        <select asp-for="Input.LocationId" asp-items="Model.LocationOptions" class="form-select"><option value="0">Select an Inventory Location</option></select>
+        <span asp-validation-for="Input.LocationId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.QuantityAtLocation" class="form-label"></label>
+        <input asp-for="Input.QuantityAtLocation" class="form-control" autofocus />
+        <span asp-validation-for="Input.QuantityAtLocation" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.Notes" class="form-label"></label>
+        <textarea asp-for="Input.Notes" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Input.Notes" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary" disabled="@(!canCreate)">Create</button>
+    <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

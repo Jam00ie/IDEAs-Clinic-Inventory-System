@@ -1,0 +1,23 @@
+@page "{id:int}"
+@model IdeasClinicInventory.Web.Pages.Admin.UntrackedUnits.DeleteModel
+@{
+    ViewData["Title"] = "Delete Untracked Units";
+}
+
+<h1>Delete Untracked Units</h1>
+<div class="alert alert-danger" role="alert">
+    <strong>This permanently deletes @Model.Unit.DisplayName.</strong> This action cannot be undone.
+</div>
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+    <input type="hidden" asp-for="Input.Id" />
+    <input type="hidden" asp-for="Input.RowVersion" />
+    <dl class="row details-list">
+        <dt class="col-sm-4">Catalog Item</dt><dd class="col-sm-8">@Model.Unit.CatalogItem.Name</dd>
+        <dt class="col-sm-4">Inventory Location</dt><dd class="col-sm-8">@Model.Unit.Location.LocationCode</dd>
+        <dt class="col-sm-4">Quantity at Location</dt><dd class="col-sm-8">@Model.Unit.QuantityAtLocation</dd>
+    </dl>
+    <button type="submit" class="btn btn-danger">Delete Permanently</button>
+    <a asp-page="Details" asp-route-id="@Model.Unit.Id" class="btn btn-outline-secondary">Cancel</a>
+</form>

@@ -1,0 +1,54 @@
+@page
+@model IdeasClinicInventory.Web.Pages.Admin.InventoryLocations.CreateModel
+@{
+    ViewData["Title"] = "Create Inventory Location";
+}
+
+<h1>Create Inventory Location</h1>
+<p class="text-muted">Levels are counted from bottom to top. Use 0 when a room or storage unit is not designated.</p>
+
+<form method="post" class="admin-form">
+    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="Location.RoomCode" class="form-label"></label>
+            <input asp-for="Location.RoomCode" class="form-control text-uppercase" autofocus />
+            <span asp-validation-for="Location.RoomCode" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="Location.StorageUnitCode" class="form-label"></label>
+            <input asp-for="Location.StorageUnitCode" class="form-control text-uppercase" />
+            <span asp-validation-for="Location.StorageUnitCode" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="Location.StorageUnitLevel" class="form-label"></label>
+            <input asp-for="Location.StorageUnitLevel" class="form-control" />
+            <span asp-validation-for="Location.StorageUnitLevel" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="Location.Subunit" class="form-label"></label>
+            <input asp-for="Location.Subunit" class="form-control text-uppercase" placeholder="Optional, e.g. B4" />
+            <span asp-validation-for="Location.Subunit" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Location.ReferenceImagePath" class="form-label"></label>
+        <input asp-for="Location.ReferenceImagePath" class="form-control" />
+        <span asp-validation-for="Location.ReferenceImagePath" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Location.Notes" class="form-label"></label>
+        <textarea asp-for="Location.Notes" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Location.Notes" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

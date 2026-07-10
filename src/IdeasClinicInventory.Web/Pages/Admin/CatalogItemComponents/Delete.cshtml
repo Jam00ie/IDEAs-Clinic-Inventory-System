@@ -1,0 +1,23 @@
+@page "{id:int}"
+@model IdeasClinicInventory.Web.Pages.Admin.CatalogItemComponents.DeleteModel
+@{
+    ViewData["Title"] = "Delete Catalog Item Component";
+}
+
+<h1>Delete Catalog Item Component</h1>
+<div class="alert alert-danger" role="alert">
+    <strong>This permanently deletes @Model.Component.DisplayName from @Model.Component.CatalogItem.Name.</strong>
+</div>
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+    <input type="hidden" asp-for="Input.Id" />
+    <input type="hidden" asp-for="Input.RowVersion" />
+    <dl class="row details-list">
+        <dt class="col-sm-4">Catalog Item</dt><dd class="col-sm-8">@Model.Component.CatalogItem.Name</dd>
+        <dt class="col-sm-4">Component Name</dt><dd class="col-sm-8">@Model.Component.Name</dd>
+        <dt class="col-sm-4">Expected Quantity per Unit</dt><dd class="col-sm-8">@Model.Component.ExpectedQuantity</dd>
+    </dl>
+    <button type="submit" class="btn btn-danger">Delete Permanently</button>
+    <a asp-page="Details" asp-route-id="@Model.Component.Id" class="btn btn-outline-secondary">Cancel</a>
+</form>

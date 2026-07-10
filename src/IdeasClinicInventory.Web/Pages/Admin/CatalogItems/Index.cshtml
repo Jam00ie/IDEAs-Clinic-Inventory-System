@@ -1,0 +1,70 @@
+@page
+@model IdeasClinicInventory.Web.Pages.Admin.CatalogItems.IndexModel
+@{
+    ViewData["Title"] = "Catalog Items";
+}
+
+@if (TempData["StatusMessage"] is string statusMessage)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="status">
+        @statusMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+        <h1>Catalog Items</h1>
+        <p class="text-muted mb-0">Manage the definitions shared by tracked units and quantity-based stock.</p>
+    </div>
+    <a class="btn btn-primary" asp-page="Create">Create catalog item</a>
+</div>
+
+<div class="alert alert-warning" role="alert">
+    Authentication is not connected yet. These pages will be restricted to IDEAs Clinic administrators when Entra ID is added.
+</div>
+
+@if (Model.CatalogItems.Count == 0)
+{
+    <div class="alert alert-info">No catalog items have been created.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Allowed Use</th>
+                    <th>Access</th>
+                    <th>Components</th>
+                    <th>Tracked Units</th>
+                    <th>Untracked Quantity</th>
+                    <th>Total Counted Quantity</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CatalogItems)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@(item.Category ?? "—")</td>
+                        <td>@Html.DisplayFor(_ => item.AllowedUseType)</td>
+                        <td>@(item.RestrictedToAdmins ? "Admin only" : "All Waterloo users")</td>
+                        <td>@(Model.GetComponentCount(item.Id) == 0 ? "Whole" : Model.GetComponentCount(item.Id))</td>
+                        <td>@Model.GetTrackedUnitCount(item.Id)</td>
+                        <td>@Model.GetUntrackedUnitQuantity(item.Id)</td>
+                        <td><strong>@Model.GetTotalCountedQuantity(item.Id)</strong></td>
+                        <td class="text-end text-nowrap">
+                            <a class="btn btn-sm btn-outline-secondary" asp-page="Details" asp-route-id="@item.Id">View</a>
+                            <a class="btn btn-sm btn-outline-primary" asp-page="Edit" asp-route-id="@item.Id">Edit</a>
+                            <a class="btn btn-sm btn-outline-danger" asp-page="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

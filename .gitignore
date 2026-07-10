@@ -427,3 +427,25 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# IDEAs Clinic Inventory System: machine-local configuration and secrets
+# Keep appsettings.json and appsettings.Development.json tracked. They contain
+# shared, non-secret defaults; real credentials belong in User Secrets or an
+# explicitly local override file matching one of the patterns below.
+**/appsettings.Local.json
+**/appsettings.*.Local.json
+**/appsettings.Secrets.json
+**/appsettings.*.Secrets.json
+.env*
+!.env.example
+
+# Other editor and operating-system metadata
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local database backups and ad-hoc SQLite databases
+*.bak
+*.sqlite
+*.sqlite3
