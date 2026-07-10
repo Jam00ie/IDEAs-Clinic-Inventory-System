@@ -1,10 +1,10 @@
 @page "{id:int}"
 @model IdeasClinicInventory.Web.Pages.Admin.TrackedUnits.DeleteModel
 @{
-    ViewData["Title"] = "Delete tracked unit";
+    ViewData["Title"] = "Delete Tracked Unit";
 }
 
-<h1>Delete tracked unit</h1>
+<h1>Delete Tracked Unit</h1>
 <div class="alert alert-danger" role="alert">
     <strong>This permanently deletes @Model.Unit.DisplayName.</strong> This action cannot be undone.
 </div>
@@ -15,10 +15,10 @@
     <input type="hidden" asp-for="Input.RowVersion" />
 
     <dl class="row details-list">
-        <dt class="col-sm-4">Catalog item</dt><dd class="col-sm-8">@Model.Unit.CatalogItem.Name</dd>
+        <dt class="col-sm-4">Catalog Item</dt><dd class="col-sm-8">@Model.Unit.CatalogItem.Name</dd>
         <dt class="col-sm-4">Identifier</dt><dd class="col-sm-8">@Model.Unit.Identifier</dd>
         <dt class="col-sm-4">Status</dt><dd class="col-sm-8">@Html.DisplayFor(model => model.Unit.Status)</dd>
-        <dt class="col-sm-4">Home location</dt><dd class="col-sm-8">@Model.Unit.HomeLocation.LocationCode</dd>
+        <dt class="col-sm-4">Home Location</dt><dd class="col-sm-8">@Model.Unit.HomeLocation.LocationCode</dd>
     </dl>
 
     <button type="submit" class="btn btn-danger">Delete permanently</button>

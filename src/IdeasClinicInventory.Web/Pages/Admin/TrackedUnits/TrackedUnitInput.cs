@@ -10,7 +10,7 @@ namespace IdeasClinicInventory.Web.Pages.Admin.TrackedUnits;
 /// A dedicated input model prevents navigation, audit, and database-generated
 /// properties on TrackedUnit from being over-posted by a browser request.
 /// </remarks>
-public sealed class TrackedUnitInput
+public sealed class TrackedUnitInput : IValidatableObject
 {
     public int Id { get; set; }
 
@@ -18,9 +18,27 @@ public sealed class TrackedUnitInput
     [Range(1, int.MaxValue, ErrorMessage = "Select a catalog item.")]
     public int CatalogItemId { get; set; }
 
-    [Required]
     [StringLength(100)]
-    public string Identifier { get; set; } = string.Empty;
+    public string? Identifier { get; set; }
+
+    [Display(Name = "Identifier generation method")]
+    public IdentifierGenerationMethod GenerationMethod { get; set; }
+
+    [Display(Name = "Starting identifier")]
+    [StringLength(100)]
+    public string? StartingIdentifier { get; set; }
+
+    [Display(Name = "Identifier prefix")]
+    [StringLength(50)]
+    public string? IdentifierPrefix { get; set; }
+
+    [Display(Name = "Identifier postfix")]
+    [StringLength(50)]
+    public string? IdentifierPostfix { get; set; }
+
+    [Display(Name = "Number of units")]
+    [Range(1, TrackedUnitIdentifierGenerator.MaximumBatchSize)]
+    public int Quantity { get; set; } = 1;
 
     [Display(Name = "Home location")]
     [Range(1, int.MaxValue, ErrorMessage = "Select a home location.")]
@@ -43,4 +61,17 @@ public sealed class TrackedUnitInput
         Notes = unit.Notes,
         RowVersion = unit.RowVersion
     };
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (GenerationMethod == IdentifierGenerationMethod.Manual && string.IsNullOrWhiteSpace(Identifier))
+        {
+            yield return new ValidationResult("Enter an identifier.", [nameof(Identifier)]);
+        }
+
+        if (GenerationMethod != IdentifierGenerationMethod.Manual && string.IsNullOrWhiteSpace(StartingIdentifier))
+        {
+            yield return new ValidationResult("Enter a starting identifier.", [nameof(StartingIdentifier)]);
+        }
+    }
 }

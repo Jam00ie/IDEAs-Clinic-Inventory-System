@@ -1,10 +1,10 @@
 @page "{id:int}"
 @model IdeasClinicInventory.Web.Pages.Admin.InventoryLocations.DeleteModel
 @{
-    ViewData["Title"] = "Delete inventory location";
+    ViewData["Title"] = "Delete Inventory Location";
 }
 
-<h1>Delete inventory location</h1>
+<h1>Delete Inventory Location</h1>
 <div class="alert alert-danger" role="alert">
     <strong>This permanently deletes @Model.Location.LocationCode.</strong> This action cannot be undone.
 </div>
@@ -15,8 +15,8 @@
     <input type="hidden" asp-for="Location.RowVersion" />
 
     <dl class="row details-list">
-        <dt class="col-sm-4">Room code</dt><dd class="col-sm-8">@Model.Location.RoomCode</dd>
-        <dt class="col-sm-4">Storage unit</dt><dd class="col-sm-8">@Model.Location.StorageUnitCode</dd>
+        <dt class="col-sm-4">Room Code</dt><dd class="col-sm-8">@Model.Location.RoomCode</dd>
+        <dt class="col-sm-4">Storage Unit</dt><dd class="col-sm-8">@Model.Location.StorageUnitCode</dd>
         <dt class="col-sm-4">Level</dt><dd class="col-sm-8">@Model.Location.StorageUnitLevel</dd>
         <dt class="col-sm-4">Subunit</dt><dd class="col-sm-8">@(Model.Location.Subunit ?? "—")</dd>
     </dl>

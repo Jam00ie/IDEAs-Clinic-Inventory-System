@@ -35,22 +35,65 @@ public sealed class CreateModel(ApplicationDbContext dbContext) : TrackedUnitPag
     {
         await ValidateParentIdsAsync(Input);
 
+        IReadOnlyList<string> identifiers = [];
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                identifiers = TrackedUnitIdentifierGenerator.Generate(
+                    Input.GenerationMethod,
+                    Input.Identifier,
+                    Input.StartingIdentifier,
+                    Input.Quantity,
+                    Input.IdentifierPrefix,
+                    Input.IdentifierPostfix);
+            }
+            catch (Exception exception) when (exception is ArgumentException or OverflowException)
+            {
+                var field = Input.GenerationMethod == IdentifierGenerationMethod.Manual
+                    ? "Input.Identifier"
+                    : "Input.StartingIdentifier";
+                // ArgumentException appends a parameter name on a second line;
+                // only the actionable first line belongs in the validation UI.
+                var message = exception.Message.Split(Environment.NewLine, StringSplitOptions.None)[0];
+                ModelState.AddModelError(field, message);
+            }
+        }
+
         if (!ModelState.IsValid)
         {
             await LoadOptionsAsync();
             return Page();
         }
 
-        var unit = new TrackedUnit
+        // Detect collisions before writing so the administrator sees every conflicting
+        // identifier. The unique index still protects against simultaneous requests.
+        var existingIdentifiers = await DbContext.TrackedUnits
+            .Where(unit => unit.CatalogItemId == Input.CatalogItemId && identifiers.Contains(unit.Identifier))
+            .Select(unit => unit.Identifier)
+            .OrderBy(identifier => identifier)
+            .ToListAsync();
+        if (existingIdentifiers.Count > 0)
+        {
+            ModelState.AddModelError(
+                Input.GenerationMethod == IdentifierGenerationMethod.Manual
+                    ? "Input.Identifier"
+                    : "Input.StartingIdentifier",
+                $"These identifiers already exist for the selected catalog item: {string.Join(", ", existingIdentifiers)}.");
+            await LoadOptionsAsync();
+            return Page();
+        }
+
+        var units = identifiers.Select(identifier => new TrackedUnit
         {
             CatalogItemId = Input.CatalogItemId,
-            Identifier = Input.Identifier,
+            Identifier = identifier,
             HomeLocationId = Input.HomeLocationId,
             Status = Input.Status,
             Notes = Input.Notes
-        };
+        }).ToList();
 
-        DbContext.TrackedUnits.Add(unit);
+        DbContext.TrackedUnits.AddRange(units);
 
         try
         {
@@ -58,13 +101,21 @@ public sealed class CreateModel(ApplicationDbContext dbContext) : TrackedUnitPag
         }
         catch (DbUpdateException exception) when (exception.IsUniqueConstraintViolation())
         {
-            ModelState.AddModelError("Input.Identifier",
-                "This catalog item already has a tracked unit with that identifier.");
+            ModelState.AddModelError(
+                Input.GenerationMethod == IdentifierGenerationMethod.Manual
+                    ? "Input.Identifier"
+                    : "Input.StartingIdentifier",
+                "One or more generated identifiers were created by another request. Review the batch and try again.");
             await LoadOptionsAsync();
             return Page();
         }
 
-        TempData["StatusMessage"] = $"Created tracked unit '{unit.Identifier}'.";
-        return RedirectToPage("Details", new { id = unit.Id });
+        TempData["StatusMessage"] = units.Count == 1
+            ? $"Created tracked unit '{units[0].Identifier}'."
+            : $"Created {units.Count} tracked units ({units[0].Identifier}–{units[^1].Identifier}).";
+
+        return units.Count == 1
+            ? RedirectToPage("Details", new { id = units[0].Id })
+            : RedirectToPage("Index", new { catalogItemId = Input.CatalogItemId });
     }
 }

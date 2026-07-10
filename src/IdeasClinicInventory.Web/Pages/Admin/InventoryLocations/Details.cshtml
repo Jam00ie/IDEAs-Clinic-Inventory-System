@@ -13,12 +13,42 @@
 </div>
 
 <dl class="row details-list">
-    <dt class="col-sm-4">Room code</dt><dd class="col-sm-8">@Model.Location.RoomCode</dd>
-    <dt class="col-sm-4">Storage unit level</dt><dd class="col-sm-8">@Model.Location.StorageUnitLevel</dd>
-    <dt class="col-sm-4">Storage unit code</dt><dd class="col-sm-8">@Model.Location.StorageUnitCode</dd>
+    <dt class="col-sm-4">Room Code</dt><dd class="col-sm-8">@Model.Location.RoomCode</dd>
+    <dt class="col-sm-4">Storage Unit Level</dt><dd class="col-sm-8">@Model.Location.StorageUnitLevel</dd>
+    <dt class="col-sm-4">Storage Unit Code</dt><dd class="col-sm-8">@Model.Location.StorageUnitCode</dd>
     <dt class="col-sm-4">Subunit</dt><dd class="col-sm-8">@(Model.Location.Subunit ?? "—")</dd>
-    <dt class="col-sm-4">Reference image path</dt><dd class="col-sm-8 text-break">@(Model.Location.ReferenceImagePath ?? "—")</dd>
+    <dt class="col-sm-4">Reference Image Path</dt><dd class="col-sm-8 text-break">@(Model.Location.ReferenceImagePath ?? "—")</dd>
     <dt class="col-sm-4">Notes</dt><dd class="col-sm-8 preserve-lines">@(Model.Location.Notes ?? "—")</dd>
     <dt class="col-sm-4">Created</dt><dd class="col-sm-8">@Model.Location.CreatedAtUtc.ToLocalTime().ToString("g")</dd>
-    <dt class="col-sm-4">Last updated</dt><dd class="col-sm-8">@Model.Location.UpdatedAtUtc.ToLocalTime().ToString("g")</dd>
+    <dt class="col-sm-4">Last Updated</dt><dd class="col-sm-8">@Model.Location.UpdatedAtUtc.ToLocalTime().ToString("g")</dd>
 </dl>
+
+<div class="d-flex align-items-center justify-content-between mt-5 mb-3">
+    <h2>Tracked Units Stored Here (@Model.StoredTrackedUnits.Count)</h2>
+</div>
+
+@if (Model.StoredTrackedUnits.Count == 0)
+{
+    <p class="text-muted">No tracked units use this as their home location.</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead><tr><th>Unit</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
+            <tbody>
+                @foreach (var unit in Model.StoredTrackedUnits)
+                {
+                    <tr>
+                        <td>@unit.DisplayName</td>
+                        <td>@Html.DisplayFor(_ => unit.Status)</td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-secondary" asp-page="/Admin/TrackedUnits/Details" asp-route-id="@unit.Id">View</a>
+                            <a class="btn btn-sm btn-outline-primary" asp-page="/Admin/TrackedUnits/Edit" asp-route-id="@unit.Id">Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -18,6 +18,7 @@ The completed foundation and first schema slice provide:
 - Initial EF Core migrations applied to the local development database
 - Administrative create, view, edit, and delete pages for both tables
 - Individually identifiable tracked units linked to catalog items and home locations
+- Atomic tracked-unit batch creation with numerical or alphabetical identifiers
 
 Tracked units and untracked inventory quantities will be added in a later milestone.
 
@@ -110,6 +111,12 @@ The pages validate input, report duplicate records, and use SQL Server rowversio
 values to prevent one administrator from silently overwriting another's changes.
 Authentication is not connected yet, so these routes are not currently secure.
 An Entra-backed `AdminOnly` authorization policy must be applied before deployment.
+
+Tracked units can be entered individually or generated in batches. Numerical
+batches support arbitrary starting numbers and optional zero padding; alphabetical
+batches continue from `Z` to `AA`, `AB`, and so on. Optional prefixes and postfixes
+can wrap every generated value, such as `KC-2-2026`. A batch is validated for
+identifier length and collisions before it is saved as one atomic database operation.
 
 ## Repository structure
 

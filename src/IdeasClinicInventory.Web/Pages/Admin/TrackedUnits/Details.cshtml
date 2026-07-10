@@ -21,13 +21,13 @@
 </div>
 
 <dl class="row details-list">
-    <dt class="col-sm-4">Catalog item</dt>
+    <dt class="col-sm-4">Catalog Item</dt>
     <dd class="col-sm-8"><a asp-page="/Admin/CatalogItems/Details" asp-route-id="@Model.Unit.CatalogItemId">@Model.Unit.CatalogItem.Name</a></dd>
     <dt class="col-sm-4">Identifier</dt><dd class="col-sm-8">@Model.Unit.Identifier</dd>
     <dt class="col-sm-4">Status</dt><dd class="col-sm-8">@Html.DisplayFor(model => model.Unit.Status)</dd>
-    <dt class="col-sm-4">Home location</dt>
+    <dt class="col-sm-4">Home Location</dt>
     <dd class="col-sm-8"><a asp-page="/Admin/InventoryLocations/Details" asp-route-id="@Model.Unit.HomeLocationId">@Model.Unit.HomeLocation.LocationCode</a></dd>
     <dt class="col-sm-4">Notes</dt><dd class="col-sm-8 preserve-lines">@(Model.Unit.Notes ?? "—")</dd>
     <dt class="col-sm-4">Created</dt><dd class="col-sm-8">@Model.Unit.CreatedAtUtc.ToLocalTime().ToString("g")</dd>
-    <dt class="col-sm-4">Last updated</dt><dd class="col-sm-8">@Model.Unit.UpdatedAtUtc.ToLocalTime().ToString("g")</dd>
+    <dt class="col-sm-4">Last Updated</dt><dd class="col-sm-8">@Model.Unit.UpdatedAtUtc.ToLocalTime().ToString("g")</dd>
 </dl>

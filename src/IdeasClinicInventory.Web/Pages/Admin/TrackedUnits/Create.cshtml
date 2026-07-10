@@ -1,12 +1,12 @@
 @page
 @model IdeasClinicInventory.Web.Pages.Admin.TrackedUnits.CreateModel
 @{
-    ViewData["Title"] = "Create tracked unit";
+    ViewData["Title"] = "Create Tracked Units";
     var canCreate = Model.CatalogItemOptions.Count > 0 && Model.HomeLocationOptions.Count > 0;
 }
 
-<h1>Create tracked unit</h1>
-<p class="text-muted">Add one individually identifiable physical unit to a catalog item.</p>
+<h1>Create Tracked Units</h1>
+<p class="text-muted">Add one unit manually or generate a numerical or alphabetical batch.</p>
 
 @if (!canCreate)
 {
@@ -27,10 +27,38 @@
         <span asp-validation-for="Input.CatalogItemId" class="text-danger"></span>
     </div>
     <div class="mb-3">
+        <label asp-for="Input.GenerationMethod" class="form-label"></label>
+        <select asp-for="Input.GenerationMethod" asp-items="Html.GetEnumSelectList<IdentifierGenerationMethod>()" class="form-select"></select>
+        <span asp-validation-for="Input.GenerationMethod" class="text-danger"></span>
+    </div>
+    <div id="manual-identifier-fields" class="mb-3">
         <label asp-for="Input.Identifier" class="form-label"></label>
         <input asp-for="Input.Identifier" class="form-control" placeholder="A1, #14, Kit-03…" autofocus />
         <div class="form-text">Must be unique within the selected catalog item.</div>
         <span asp-validation-for="Input.Identifier" class="text-danger"></span>
+    </div>
+    <div id="batch-identifier-fields" class="row" hidden>
+        <div class="col-md-6 mb-3">
+            <label asp-for="Input.StartingIdentifier" class="form-label"></label>
+            <input asp-for="Input.StartingIdentifier" class="form-control text-uppercase" placeholder="2 for numerical, C for alphabetical" />
+            <span asp-validation-for="Input.StartingIdentifier" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="Input.Quantity" class="form-label"></label>
+            <input asp-for="Input.Quantity" class="form-control" />
+            <div class="form-text">Maximum @TrackedUnitIdentifierGenerator.MaximumBatchSize units per batch.</div>
+            <span asp-validation-for="Input.Quantity" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="Input.IdentifierPrefix" class="form-label"></label>
+            <input asp-for="Input.IdentifierPrefix" class="form-control" placeholder="Optional, e.g. KC-" />
+            <span asp-validation-for="Input.IdentifierPrefix" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="Input.IdentifierPostfix" class="form-label"></label>
+            <input asp-for="Input.IdentifierPostfix" class="form-control" placeholder="Optional, e.g. -2026" />
+            <span asp-validation-for="Input.IdentifierPostfix" class="text-danger"></span>
+        </div>
     </div>
     <div class="mb-3">
         <label asp-for="Input.HomeLocationId" class="form-label"></label>
@@ -49,10 +77,26 @@
         <span asp-validation-for="Input.Notes" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary" disabled="@(!canCreate)">Create</button>
+    <button type="submit" class="btn btn-primary" disabled="@(!canCreate)">Create Unit(s)</button>
     <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
 </form>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        (() => {
+            const method = document.getElementById("Input_GenerationMethod");
+            const manualFields = document.getElementById("manual-identifier-fields");
+            const batchFields = document.getElementById("batch-identifier-fields");
+
+            const updateIdentifierFields = () => {
+                const isManual = method.value === "0";
+                manualFields.hidden = !isManual;
+                batchFields.hidden = isManual;
+            };
+
+            method.addEventListener("change", updateIdentifierFields);
+            updateIdentifierFields();
+        })();
+    </script>
 }

@@ -45,7 +45,8 @@ public sealed class EditModel(ApplicationDbContext dbContext) : TrackedUnitPageM
 
         DbContext.Entry(unitToUpdate).Property(unit => unit.RowVersion).OriginalValue = Input.RowVersion;
         unitToUpdate.CatalogItemId = Input.CatalogItemId;
-        unitToUpdate.Identifier = Input.Identifier;
+        // Manual edit validation guarantees a nonblank identifier before this point.
+        unitToUpdate.Identifier = Input.Identifier!;
         unitToUpdate.HomeLocationId = Input.HomeLocationId;
         unitToUpdate.Status = Input.Status;
         unitToUpdate.Notes = Input.Notes;
