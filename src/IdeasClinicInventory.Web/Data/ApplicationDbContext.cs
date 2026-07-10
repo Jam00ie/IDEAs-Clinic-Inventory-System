@@ -19,6 +19,8 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
 
     public DbSet<TrackedUnit> TrackedUnits => Set<TrackedUnit>();
 
+    public DbSet<UntrackedUnit> UntrackedUnits => Set<UntrackedUnit>();
+
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
         PrepareEntitiesForSave();
@@ -73,6 +75,11 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
                 entry.Entity.Identifier = entry.Entity.Identifier.Trim();
             }
 
+            SetAuditTimestamps(entry, now);
+        }
+
+        foreach (var entry in ChangeTracker.Entries<UntrackedUnit>())
+        {
             SetAuditTimestamps(entry, now);
         }
     }

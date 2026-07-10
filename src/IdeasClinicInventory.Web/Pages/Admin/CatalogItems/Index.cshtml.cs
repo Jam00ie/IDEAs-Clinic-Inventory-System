@@ -12,6 +12,9 @@ public sealed class IndexModel(ApplicationDbContext dbContext) : PageModel
     public IReadOnlyDictionary<int, int> TrackedUnitCounts { get; private set; }
         = new Dictionary<int, int>();
 
+    public IReadOnlyDictionary<int, int> UntrackedUnitQuantities { get; private set; }
+        = new Dictionary<int, int>();
+
     public async Task OnGetAsync()
     {
         // List pages are read-only, so no-tracking queries avoid unnecessary
@@ -25,8 +28,19 @@ public sealed class IndexModel(ApplicationDbContext dbContext) : PageModel
             .AsNoTracking()
             .GroupBy(unit => unit.CatalogItemId)
             .ToDictionaryAsync(group => group.Key, group => group.Count());
+
+        UntrackedUnitQuantities = await dbContext.UntrackedUnits
+            .AsNoTracking()
+            .GroupBy(unit => unit.CatalogItemId)
+            .ToDictionaryAsync(group => group.Key, group => group.Sum(unit => unit.QuantityAtLocation));
     }
 
     public int GetTrackedUnitCount(int catalogItemId) =>
         TrackedUnitCounts.GetValueOrDefault(catalogItemId);
+
+    public int GetUntrackedUnitQuantity(int catalogItemId) =>
+        UntrackedUnitQuantities.GetValueOrDefault(catalogItemId);
+
+    public int GetTotalCountedQuantity(int catalogItemId) =>
+        GetTrackedUnitCount(catalogItemId) + GetUntrackedUnitQuantity(catalogItemId);
 }

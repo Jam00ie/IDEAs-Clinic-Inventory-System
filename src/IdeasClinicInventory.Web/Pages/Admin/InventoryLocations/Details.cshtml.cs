@@ -12,6 +12,10 @@ public sealed class DetailsModel(ApplicationDbContext dbContext) : PageModel
 
     public IReadOnlyList<TrackedUnit> StoredTrackedUnits { get; private set; } = [];
 
+    public IReadOnlyList<UntrackedUnit> StoredUntrackedUnits { get; private set; } = [];
+
+    public int StoredUntrackedQuantity => StoredUntrackedUnits.Sum(unit => unit.QuantityAtLocation);
+
     public async Task<IActionResult> OnGetAsync(int id)
     {
         var location = await dbContext.InventoryLocations.AsNoTracking()
@@ -28,6 +32,12 @@ public sealed class DetailsModel(ApplicationDbContext dbContext) : PageModel
             .Where(unit => unit.HomeLocationId == id)
             .OrderBy(unit => unit.CatalogItem.Name)
             .ThenBy(unit => unit.Identifier)
+            .ToListAsync();
+        StoredUntrackedUnits = await dbContext.UntrackedUnits
+            .AsNoTracking()
+            .Include(unit => unit.CatalogItem)
+            .Where(unit => unit.LocationId == id)
+            .OrderBy(unit => unit.CatalogItem.Name)
             .ToListAsync();
         return Page();
     }

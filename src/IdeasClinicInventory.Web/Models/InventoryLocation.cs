@@ -81,6 +81,8 @@ public sealed class InventoryLocation
 
     public ICollection<TrackedUnit> TrackedUnits { get; set; } = [];
 
+    public ICollection<UntrackedUnit> UntrackedUnits { get; set; } = [];
+
     internal void NormalizeCodes()
     {
         // Normalizing before persistence makes the composite unique index reliable even

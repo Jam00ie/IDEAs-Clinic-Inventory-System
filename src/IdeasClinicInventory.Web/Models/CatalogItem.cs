@@ -57,4 +57,9 @@ public sealed class CatalogItem
     /// Individually identifiable physical units belonging to this catalog definition.
     /// </summary>
     public ICollection<TrackedUnit> TrackedUnits { get; set; } = [];
+
+    /// <summary>
+    /// Quantity-based stock buckets stored at distinct inventory locations.
+    /// </summary>
+    public ICollection<UntrackedUnit> UntrackedUnits { get; set; } = [];
 }

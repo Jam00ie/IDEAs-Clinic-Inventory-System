@@ -1,0 +1,30 @@
+@page "{id:int}"
+@model IdeasClinicInventory.Web.Pages.Admin.UntrackedUnits.DetailsModel
+@{
+    ViewData["Title"] = Model.Unit.DisplayName;
+}
+
+@if (TempData["StatusMessage"] is string statusMessage)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="status">
+        @statusMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h1>@Model.Unit.DisplayName</h1>
+    <div>
+        <a class="btn btn-primary" asp-page="Edit" asp-route-id="@Model.Unit.Id">Edit</a>
+        <a class="btn btn-outline-secondary" asp-page="Index" asp-route-catalogItemId="@Model.Unit.CatalogItemId">Back to Untracked Units</a>
+    </div>
+</div>
+
+<dl class="row details-list">
+    <dt class="col-sm-4">Catalog Item</dt><dd class="col-sm-8"><a asp-page="/Admin/CatalogItems/Details" asp-route-id="@Model.Unit.CatalogItemId">@Model.Unit.CatalogItem.Name</a></dd>
+    <dt class="col-sm-4">Inventory Location</dt><dd class="col-sm-8"><a asp-page="/Admin/InventoryLocations/Details" asp-route-id="@Model.Unit.LocationId">@Model.Unit.Location.LocationCode</a></dd>
+    <dt class="col-sm-4">Quantity at Location</dt><dd class="col-sm-8">@Model.Unit.QuantityAtLocation</dd>
+    <dt class="col-sm-4">Notes</dt><dd class="col-sm-8 preserve-lines">@(Model.Unit.Notes ?? "—")</dd>
+    <dt class="col-sm-4">Created</dt><dd class="col-sm-8">@Model.Unit.CreatedAtUtc.ToLocalTime().ToString("g")</dd>
+    <dt class="col-sm-4">Last Updated</dt><dd class="col-sm-8">@Model.Unit.UpdatedAtUtc.ToLocalTime().ToString("g")</dd>
+</dl>

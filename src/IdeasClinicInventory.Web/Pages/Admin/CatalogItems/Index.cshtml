@@ -39,6 +39,8 @@ else
                     <th>Allowed Use</th>
                     <th>Access</th>
                     <th>Tracked Units</th>
+                    <th>Untracked Quantity</th>
+                    <th>Total Counted Quantity</th>
                     <th class="text-end">Actions</th>
                 </tr>
             </thead>
@@ -51,6 +53,8 @@ else
                         <td>@Html.DisplayFor(_ => item.AllowedUseType)</td>
                         <td>@(item.RestrictedToAdmins ? "Admin only" : "All Waterloo users")</td>
                         <td>@Model.GetTrackedUnitCount(item.Id)</td>
+                        <td>@Model.GetUntrackedUnitQuantity(item.Id)</td>
+                        <td><strong>@Model.GetTotalCountedQuantity(item.Id)</strong></td>
                         <td class="text-end text-nowrap">
                             <a class="btn btn-sm btn-outline-secondary" asp-page="Details" asp-route-id="@item.Id">View</a>
                             <a class="btn btn-sm btn-outline-primary" asp-page="Edit" asp-route-id="@item.Id">Edit</a>
