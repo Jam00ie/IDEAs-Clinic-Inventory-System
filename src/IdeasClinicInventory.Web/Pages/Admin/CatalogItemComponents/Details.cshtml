@@ -1,0 +1,29 @@
+@page "{id:int}"
+@model IdeasClinicInventory.Web.Pages.Admin.CatalogItemComponents.DetailsModel
+@{
+    ViewData["Title"] = Model.Component.DisplayName;
+}
+
+@if (TempData["StatusMessage"] is string statusMessage)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="status">
+        @statusMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h1>@Model.Component.Name</h1>
+    <div>
+        <a class="btn btn-primary" asp-page="Edit" asp-route-id="@Model.Component.Id">Edit</a>
+        <a class="btn btn-outline-secondary" asp-page="Index" asp-route-catalogItemId="@Model.Component.CatalogItemId">Back to Components</a>
+    </div>
+</div>
+
+<dl class="row details-list">
+    <dt class="col-sm-4">Catalog Item</dt><dd class="col-sm-8"><a asp-page="/Admin/CatalogItems/Details" asp-route-id="@Model.Component.CatalogItemId">@Model.Component.CatalogItem.Name</a></dd>
+    <dt class="col-sm-4">Component Name</dt><dd class="col-sm-8">@Model.Component.Name</dd>
+    <dt class="col-sm-4">Expected Quantity per Unit</dt><dd class="col-sm-8">@Model.Component.ExpectedQuantity</dd>
+    <dt class="col-sm-4">Created</dt><dd class="col-sm-8">@Model.Component.CreatedAtUtc.ToLocalTime().ToString("g")</dd>
+    <dt class="col-sm-4">Last Updated</dt><dd class="col-sm-8">@Model.Component.UpdatedAtUtc.ToLocalTime().ToString("g")</dd>
+</dl>

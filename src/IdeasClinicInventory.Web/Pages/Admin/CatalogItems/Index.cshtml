@@ -38,6 +38,7 @@ else
                     <th>Category</th>
                     <th>Allowed Use</th>
                     <th>Access</th>
+                    <th>Components</th>
                     <th>Tracked Units</th>
                     <th>Untracked Quantity</th>
                     <th>Total Counted Quantity</th>
@@ -52,6 +53,7 @@ else
                         <td>@(item.Category ?? "—")</td>
                         <td>@Html.DisplayFor(_ => item.AllowedUseType)</td>
                         <td>@(item.RestrictedToAdmins ? "Admin only" : "All Waterloo users")</td>
+                        <td>@(Model.GetComponentCount(item.Id) == 0 ? "Whole" : Model.GetComponentCount(item.Id))</td>
                         <td>@Model.GetTrackedUnitCount(item.Id)</td>
                         <td>@Model.GetUntrackedUnitQuantity(item.Id)</td>
                         <td><strong>@Model.GetTotalCountedQuantity(item.Id)</strong></td>

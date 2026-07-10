@@ -1,0 +1,40 @@
+@page
+@model IdeasClinicInventory.Web.Pages.Admin.CatalogItemComponents.CreateModel
+@{
+    ViewData["Title"] = "Create Catalog Item Component";
+    var canCreate = Model.CatalogItemOptions.Count > 0;
+}
+
+<h1>Create Catalog Item Component</h1>
+<p class="text-muted">Describe one part and the quantity expected in one unit of its parent item.</p>
+
+@if (!canCreate)
+{
+    <div class="alert alert-warning">Create a <a asp-page="/Admin/CatalogItems/Create">catalog item</a> first.</div>
+}
+
+<form method="post" class="admin-form">
+    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+    <div class="mb-3">
+        <label asp-for="Input.CatalogItemId" class="form-label"></label>
+        <select asp-for="Input.CatalogItemId" asp-items="Model.CatalogItemOptions" class="form-select"><option value="0">Select a Catalog Item</option></select>
+        <span asp-validation-for="Input.CatalogItemId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.Name" class="form-label"></label>
+        <input asp-for="Input.Name" class="form-control" autofocus />
+        <span asp-validation-for="Input.Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.ExpectedQuantity" class="form-label"></label>
+        <input asp-for="Input.ExpectedQuantity" class="form-control" />
+        <span asp-validation-for="Input.ExpectedQuantity" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary" disabled="@(!canCreate)">Create</button>
+    <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

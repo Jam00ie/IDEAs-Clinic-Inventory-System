@@ -1,0 +1,60 @@
+@page
+@model IdeasClinicInventory.Web.Pages.Admin.CatalogItemComponents.IndexModel
+@{
+    ViewData["Title"] = "Catalog Item Components";
+}
+
+@if (TempData["StatusMessage"] is string statusMessage)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="status">
+        @statusMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+        <h1>Catalog Item Components</h1>
+        <p class="text-muted mb-0">Define the parts expected in one unit of each catalog item.</p>
+    </div>
+    <a class="btn btn-primary" asp-page="Create" asp-route-catalogItemId="@Model.CatalogItemId">Create Component</a>
+</div>
+
+<form method="get" class="row g-2 align-items-end mb-3">
+    <div class="col-sm-6 col-lg-4">
+        <label asp-for="CatalogItemId" class="form-label">Catalog Item</label>
+        <select asp-for="CatalogItemId" asp-items="Model.CatalogItemOptions" class="form-select"><option value="">All Catalog Items</option></select>
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-outline-primary" type="submit">Apply Filter</button>
+        <a class="btn btn-outline-secondary" asp-page="Index">Clear</a>
+    </div>
+</form>
+
+@if (Model.Components.Count == 0)
+{
+    <div class="alert alert-info">No components match this filter. Catalog items without components are treated as whole items.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead><tr><th>Catalog Item</th><th>Component</th><th>Expected Quantity per Unit</th><th class="text-end">Actions</th></tr></thead>
+            <tbody>
+                @foreach (var component in Model.Components)
+                {
+                    <tr>
+                        <td>@component.CatalogItem.Name</td>
+                        <td>@component.Name</td>
+                        <td>@component.ExpectedQuantity</td>
+                        <td class="text-end text-nowrap">
+                            <a class="btn btn-sm btn-outline-secondary" asp-page="Details" asp-route-id="@component.Id">View</a>
+                            <a class="btn btn-sm btn-outline-primary" asp-page="Edit" asp-route-id="@component.Id">Edit</a>
+                            <a class="btn btn-sm btn-outline-danger" asp-page="Delete" asp-route-id="@component.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

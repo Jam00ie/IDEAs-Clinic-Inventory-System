@@ -21,6 +21,7 @@ The completed foundation and first schema slice provide:
 - Atomic tracked-unit batch creation with numerical or alphabetical identifiers
 - Quantity-based untracked units grouped by catalog item and inventory location
 - Derived tracked, untracked, and total counted quantities on catalog pages
+- Structured catalog-item components with expected quantities per parent unit
 
 Tracked units and untracked inventory quantities will be added in a later milestone.
 
@@ -109,6 +110,7 @@ After starting the application, use the **Admin** navigation menu or open:
 - `/Admin/InventoryLocations`
 - `/Admin/TrackedUnits`
 - `/Admin/UntrackedUnits`
+- `/Admin/CatalogItemComponents`
 
 The pages validate input, report duplicate records, and use SQL Server rowversion
 values to prevent one administrator from silently overwriting another's changes.

@@ -55,6 +55,7 @@ public sealed class ApplicationDbContextModelTests
     [InlineData(typeof(InventoryLocation), nameof(InventoryLocation.RowVersion))]
     [InlineData(typeof(TrackedUnit), nameof(TrackedUnit.RowVersion))]
     [InlineData(typeof(UntrackedUnit), nameof(UntrackedUnit.RowVersion))]
+    [InlineData(typeof(CatalogItemComponent), nameof(CatalogItemComponent.RowVersion))]
     public void Row_version_is_a_database_generated_concurrency_token(
         Type entityType,
         string propertyName)
@@ -111,5 +112,27 @@ public sealed class ApplicationDbContextModelTests
 
         Assert.NotNull(foreignKeys);
         Assert.All(foreignKeys, foreignKey => Assert.Equal(DeleteBehavior.Restrict, foreignKey.DeleteBehavior));
+    }
+
+    [Fact]
+    public void Component_name_is_unique_within_its_catalog_item()
+    {
+        using var context = CreateContext();
+        var entity = context.Model.FindEntityType(typeof(CatalogItemComponent));
+
+        Assert.NotNull(entity);
+        Assert.Contains(entity.GetIndexes(), index =>
+            index.IsUnique &&
+            index.Properties.Select(property => property.Name).SequenceEqual(
+                [nameof(CatalogItemComponent.CatalogItemId), nameof(CatalogItemComponent.Name)]));
+    }
+
+    [Fact]
+    public void Components_are_deleted_with_their_catalog_item()
+    {
+        using var context = CreateContext();
+        var foreignKey = Assert.Single(context.Model.FindEntityType(typeof(CatalogItemComponent))!.GetForeignKeys());
+
+        Assert.Equal(DeleteBehavior.Cascade, foreignKey.DeleteBehavior);
     }
 }

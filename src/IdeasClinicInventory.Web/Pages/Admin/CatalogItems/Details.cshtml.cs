@@ -14,6 +14,8 @@ public sealed class DetailsModel(ApplicationDbContext dbContext) : PageModel
 
     public IReadOnlyList<UntrackedUnit> UntrackedUnits { get; private set; } = [];
 
+    public IReadOnlyList<CatalogItemComponent> Components { get; private set; } = [];
+
     public int UntrackedQuantity => UntrackedUnits.Sum(unit => unit.QuantityAtLocation);
 
     public int TotalCountedQuantity => TrackedUnits.Count + UntrackedQuantity;
@@ -40,6 +42,11 @@ public sealed class DetailsModel(ApplicationDbContext dbContext) : PageModel
             .OrderBy(unit => unit.Location.RoomCode)
             .ThenBy(unit => unit.Location.StorageUnitLevel)
             .ThenBy(unit => unit.Location.StorageUnitCode)
+            .ToListAsync();
+        Components = await dbContext.CatalogItemComponents
+            .AsNoTracking()
+            .Where(component => component.CatalogItemId == id)
+            .OrderBy(component => component.Name)
             .ToListAsync();
         return Page();
     }

@@ -62,4 +62,9 @@ public sealed class CatalogItem
     /// Quantity-based stock buckets stored at distinct inventory locations.
     /// </summary>
     public ICollection<UntrackedUnit> UntrackedUnits { get; set; } = [];
+
+    /// <summary>
+    /// Expected parts that make up one unit; an empty collection means a whole item.
+    /// </summary>
+    public ICollection<CatalogItemComponent> Components { get; set; } = [];
 }

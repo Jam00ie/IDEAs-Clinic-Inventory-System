@@ -21,6 +21,8 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
 
     public DbSet<UntrackedUnit> UntrackedUnits => Set<UntrackedUnit>();
 
+    public DbSet<CatalogItemComponent> CatalogItemComponents => Set<CatalogItemComponent>();
+
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
         PrepareEntitiesForSave();
@@ -80,6 +82,16 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
 
         foreach (var entry in ChangeTracker.Entries<UntrackedUnit>())
         {
+            SetAuditTimestamps(entry, now);
+        }
+
+        foreach (var entry in ChangeTracker.Entries<CatalogItemComponent>())
+        {
+            if (entry.State is EntityState.Added or EntityState.Modified)
+            {
+                entry.Entity.Name = entry.Entity.Name.Trim();
+            }
+
             SetAuditTimestamps(entry, now);
         }
     }
